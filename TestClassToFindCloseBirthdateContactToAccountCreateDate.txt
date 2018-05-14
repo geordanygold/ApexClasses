@@ -1,0 +1,272 @@
+@isTest
+public class CloseBirthdayContactToAccCreateddate{
+    
+    @isTest
+    static void createSampleData(){
+        
+        Account acc = new Account (
+          Name = 'First',
+            CreateBirthdate__c = Date.parse('12/08/2017')
+        );
+        
+        Account acc2 = new Account (
+          Name = 'Second',
+            CreateBirthdate__c = Date.parse('12/08/2017')
+        );
+        
+        insert New List <Account> { acc, acc2 };
+        
+        Contact Contact1 = New Contact(
+      LastName = 'Black',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('09/08/2017'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact2 = New Contact(
+      LastName = 'Pink',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('05/11/2017'),
+            AccountId = acc.Id
+        );
+        
+        insert New List <Contact> { Contact1, Contact2 };
+            
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact1.Id, acc.ClosesBirthdayContact__c);
+    }
+    
+    
+    @isTest
+    static void afterInsert(){
+        
+        Account acc = new Account (
+          Name = 'First',
+            CreateBirthdate__c = Date.parse('12/08/2017')
+        );
+        
+        Account acc2 = new Account (
+          Name = 'Second',
+            CreateBirthdate__c = Date.parse('28/02/2018')
+        );
+        
+        insert New List <Account> { acc, acc2 };
+        
+        Contact Contact1 = New Contact(
+      LastName = 'Black',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('07/08/2017'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact2 = New Contact(
+      LastName = 'Pink',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('05/01/2018'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact3 = New Contact(
+      LastName = 'coral red',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('15/08/2017'),
+            AccountId = acc.Id
+        );
+        
+        insert New List <Contact> { Contact1, Contact2 };
+            
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact1.Id, acc.ClosesBirthdayContact__c);
+        
+        insert Contact3;
+        
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact3.Id, acc.ClosesBirthdayContact__c);
+    }
+    
+    
+    @isTest
+    static void afterUpdate(){
+        
+        Account acc = new Account (
+          Name = 'First',
+            CreateBirthdate__c = Date.parse('12/08/2017')
+        );
+        
+        Account acc2 = new Account (
+          Name = 'Second',
+            CreateBirthdate__c = Date.parse('28/02/2018')
+        );
+        
+        insert New List <Account> { acc, acc2 };
+        
+        Contact Contact1 = New Contact(
+      LastName = 'Black',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('07/08/2017'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact2 = New Contact(
+      LastName = 'Pink',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('05/01/2018'),
+            AccountId = acc2.Id
+        );
+        
+        Contact Contact3 = New Contact(
+      LastName = 'Coral red',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('15/08/2017'),
+            AccountId = acc.Id
+        );
+        
+        insert New List <Contact> { Contact1, Contact2, Contact3 };
+        
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact3.Id, acc.ClosesBirthdayContact__c);
+        
+        acc2 = [Select ClosesBirthdayContact__c From Account Where Id =: acc2.Id];
+          System.assertEquals(Contact2.Id, acc2.ClosesBirthdayContact__c);
+        
+        Contact3.AccountId = acc2.Id;
+        Contact3.Birthdate = Date.parse('27/02/2018');
+        
+        update Contact3;
+        
+        acc2 = [Select ClosesBirthdayContact__c From Account Where Id =: acc2.Id];
+          System.assertEquals(Contact3.Id, acc2.ClosesBirthdayContact__c);       
+    }
+    
+    
+    @isTest
+    static void updateAfterDelete(){
+        
+        Account acc = new Account (
+          Name = 'First',
+            CreateBirthdate__c = Date.parse('01/03/2018')
+        );
+        
+        Account acc2 = new Account (
+          Name = 'Second',
+            CreateBirthdate__c = Date.parse('25/01/2018')
+        );
+        
+        insert New List <Account> { acc, acc2 };
+        
+        Contact Contact1 = New Contact(
+      LastName = 'Black',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('01/02/2018'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact2 = New Contact(
+      LastName = 'Pink',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('01/01/2018'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact3 = New Contact(
+      LastName = 'Coral red',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('25/02/2018'),
+            AccountId = acc.Id
+        );
+        
+        insert New List <Contact> { Contact1, Contact2, Contact3 };
+            
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact3.Id, acc.ClosesBirthdayContact__c);
+        
+        delete Contact3;
+        
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact1.Id, acc.ClosesBirthdayContact__c);
+    }
+    
+    @isTest
+    static void twoContactTheSameBirthday(){
+        
+        Account acc = new Account (
+          Name = 'First',
+            CreateBirthdate__c = Date.parse('01/03/2018')
+        );        
+        
+        insert New List <Account> { acc };
+        
+        Contact Contact1 = New Contact(
+      LastName = 'Black',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('01/02/2018'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact2 = New Contact(
+      LastName = 'Pink',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('01/02/2018'),
+            AccountId = acc.Id
+        );
+        
+        insert New List <Contact> { Contact1, Contact2 };
+            
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact1.Id, acc.ClosesBirthdayContact__c);
+    }
+    
+    
+    @isTest
+    static void twoContactTwoAccsTheSameBirthday(){
+        
+        Account acc = new Account (
+          Name = 'First',
+            CreateBirthdate__c = Date.parse('01/03/2018')
+        ); 
+        
+        Account acc2 = new Account (
+          Name = 'Second',
+            CreateBirthdate__c = Date.parse('25/01/2018')
+        );
+        
+        insert New List <Account> { acc, acc2 };
+        
+        Contact Contact1 = New Contact(
+      LastName = 'Black',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('01/02/2018'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact2 = New Contact(
+      LastName = 'Pink',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('01/02/2018'),
+            AccountId = acc.Id
+        );
+        
+        Contact Contact3 = New Contact(
+      LastName = 'Coral red',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('27/02/2018'),
+            AccountId = acc2.Id
+        );
+        
+        Contact Contact4 = New Contact(
+      LastName = 'Green',
+            Firstname = 'Panther',   
+            Birthdate = Date.parse('27/02/2018'),
+            AccountId = acc2.Id
+        );
+        
+        insert New List <Contact> { Contact1, Contact2, Contact3, Contact4 };
+            
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc.Id];
+          System.assertEquals(Contact1.Id, acc.ClosesBirthdayContact__c);
+        
+        acc = [Select ClosesBirthdayContact__c From Account Where Id =: acc2.Id];
+          System.assertEquals(Contact3.Id, acc.ClosesBirthdayContact__c);
+    }            
+    
+}
