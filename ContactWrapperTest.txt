@@ -1,0 +1,25 @@
+@isTest 
+public class ContactWrapperTest {
+  static testmethod void test1() {
+        // Add the opportunity wrapper objects to a list.
+        ContactWrapper[] contList = new List<ContactWrapper>();
+
+        contList.add( new ContactWrapper(new Contact(
+            LastName='Edge Installation',
+           Priority__c = 2))); 
+          
+      
+        contList.add( new ContactWrapper(new Contact(
+            LastName='United Oil Installations',
+            Priority__c = 1))); 
+        
+      
+        contList.add( new ContactWrapper(new Contact(
+            LastName='Grand Hotels SLA',
+             Priority__c = 3))); 
+         
+        contList.sort();
+        
+        System.debug(contList);
+  }
+}
