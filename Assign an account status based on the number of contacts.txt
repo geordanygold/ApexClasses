@@ -1,0 +1,23 @@
+public class AccsAdultContacts {
+        
+    public static List <Account> FindAccAdultContacts (MAP <Id, Integer> countContsEveryAcc){
+        
+        List<Account> accsToUpdate = new List <Account>();
+        
+        for(Id idAccItem : countContsEveryAcc.keySet()){
+                        
+            Integer CountConts = countContsEveryAcc.get(idAccItem);
+            
+            if(CountConts >= 4 ){
+                accsToUpdate.add(new Account(
+                  id = idAccItem,
+                  Status__c = 'Completed'));
+            }else if (CountConts < 4){
+                accsToUpdate.add(new Account(
+                  id = idAccItem,
+                  Status__c = 'Draft'));
+            }
+        }
+        return accsToUpdate;
+    }
+}
