@@ -1,0 +1,72 @@
+public class ContactService {
+    
+    public static List <Account> accsAdultContacts (List <Id> idAccs){
+        
+        List <Contact> validContacts = new List <Contact> ();
+               
+        SET <Id> idValidContacts = new SET <Id> ();
+            
+        List <Contact> allContacts = [Select Id, AccountId, Birthdate  
+                                     From Contact 
+                                     Where AccountId In : idAccs
+                                     And PersonFullYears__c > 18];
+
+
+                
+// find Contacts with valid Cases       
+       
+        List <Case> validCases = [Select Id, ContactId, Status From Case Where ContactId In : allContacts AND Status = 'Completed'];
+            
+        MAP <Id, Integer> countCases = new MAP <Id, Integer>();
+        
+        for (Case caseItem : validCases){
+            if(!countCases.containsKey(caseItem.ContactId)){
+                countCases.put(caseItem.ContactId, 0);
+            }else if(countCases.containsKey(caseItem.ContactId)){
+                Integer currentInt = countCases.get(caseItem.ContactId) + 1;
+                countCases.put(caseItem.ContactId, currentInt);
+            }            
+        }
+            
+        for(Id idConItem : countCases.keySet()){
+                
+             Integer CountCasesItem = countCases.get(idConItem);
+            
+            validContacts.add(
+              new Contact (
+                  Id = idConItem, 
+                  CompletedCasesNumber__c = CountCasesItem));                
+        }
+                    
+            
+        MAP <Id, Integer> countContacts = new MAP <Id, Integer>();
+        
+        for (Contact contItem : validContacts){
+            if(!countContacts.containsKey(contItem.AccountId)){
+                countContacts.put(contItem.AccountId, 0);
+            }else if(countContacts.containsKey(contItem.AccountId)){
+                Integer currentInt = countContacts.get(contItem.AccountId) + 1;
+                countCases.put(contItem.AccountId, currentInt);
+            }            
+        }
+        
+        
+        List<Account> accsToUpdate = new List <Account>();
+        
+        for(Id idAccItem : countContacts.keySet()){
+                        
+            Integer CountContsItem = countContacts.get(idAccItem);
+            
+            if(CountContsItem >= 4 ){
+                accsToUpdate.add(new Account(
+                  id = idAccItem,
+                  Status__c = 'Completed'));
+            }else if (CountContsItem < 4){
+                accsToUpdate.add(new Account(
+                  id = idAccItem,
+                  Status__c = 'Draft'));
+            }
+        }
+        return accsToUpdate;
+    }
+}

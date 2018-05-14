@@ -1,0 +1,27 @@
+public class areMirrorString {
+  
+    public static Boolean areMirrorStrings(String str1, String str2){
+        
+        Boolean MirrorOrNot;
+        
+        List <String> lsr2 = str2.split('');
+        
+        LIST <String> reverselist = NEW LIST <String> ();
+        FOR (Integer x = lsr2.size() - 1; x >= 0; x--) {
+            String A = lsr2.get(x);
+            reverselist.add(A);
+        }
+        
+        string reverseItem = string.join(reverselist, '');
+        
+        IF ( str1.equalsIgnoreCase(reverseItem)){
+            MirrorOrNot = True;
+        }
+        ELSE {
+            MirrorOrNot = False;
+        }
+        
+    return MirrorOrNot;
+
+  }
+}
