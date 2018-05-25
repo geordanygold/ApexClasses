@@ -1,0 +1,20 @@
+public class SortBubble {
+    
+    public static List <Integer> sortMax (List <Integer> myList) {
+        
+        Integer max;
+        Integer before;
+        
+        for (Integer i = myList.size() - 1; i > 0 ; i--){
+            for (Integer j = 0; j < i; j++){
+                if (myList[j] > myList[j+1]){
+                    max = myList[j];
+                    before = myList[j+1];	
+                    myList[j+1] = max;
+                    myList[j] = before;
+                } 
+            }
+        }  
+        return myList;
+    }
+}
