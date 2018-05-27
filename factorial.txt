@@ -1,0 +1,13 @@
+public class Fuctorial {
+
+    public static Integer result (Integer n){
+        
+        Integer res;
+        Integer a = 1;
+        for(Integer i = 2; i <= n; i++){
+            res = a*i;
+            a = res;
+        }
+        return a;
+    }
+}
